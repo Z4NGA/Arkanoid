@@ -13,22 +13,27 @@ public:
 	const int fixedSize = 25;
 	enum ObjectType {
 		PLAYER,
-		ENEMY,
+		BOMB,
 		BOX,
 		Empty,
+		BOOST,
+		BALL,
 		UI_BUTTON,
 	};
+	int VelocityX, VelocityY;
+	bool isMoving;
 	SDL_Rect transform;
 	Renderer::Color color;
 	ObjectType type;
 	Object();
 	Object(Renderer::Color c, ObjectType ot);
 	~Object();
-	void SetSize(int w, int h);
+	void SetSize(int w, int h,bool fixedSize=true);
 	void SetPosition(int x, int y);
 	void Move(int x, int y);
 	void Move(GameEvent e);
 	void DrawObject(SDL_Renderer* rend);
+	void SetVelocity(int x, int y);
 };
 
 #endif

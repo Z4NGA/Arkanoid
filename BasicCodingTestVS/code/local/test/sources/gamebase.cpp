@@ -35,6 +35,8 @@ int main(  )
 
 	engine->GenerateMap(map->GetMap());
 
+	Player* p = engine->AddPlayer();
+	Ball* ball = engine->AddBall();
 	/*SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window* pWindow = SDL_CreateWindow("Game",
@@ -52,9 +54,9 @@ int main(  )
 	float mouseY = 256;
 	bool mousePressed = false;
 
-	bool running = true;
+	bool running = engine->isPlaying;
 	unsigned int lastTime = SDL_GetTicks();
-	while(running) {
+	while(running & engine->isPlaying) {
 		SDL_Event event;
 		while(SDL_PollEvent(&event)) {
 			switch(event.type) {
@@ -73,13 +75,16 @@ int main(  )
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				mousePressed = true;
+				engine->GetBall()->SetVelocity(5, -5);
 				break;
 			case SDL_MOUSEBUTTONUP:
 				mousePressed = false;
 				break;
 			}
 		}
-		engine->HandleBorderCollision(engine->GetPlayer()->transform);
+		engine->GetBall()->Move(0, 0);
+		engine->HandleBorderCollision(engine->GetPlayer());
+		engine->HandleBorderCollision(engine->GetBall());
 
 		engine->ClearAndRender();
 

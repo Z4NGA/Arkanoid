@@ -138,6 +138,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\sources\Ball.h" />
+    <ClInclude Include="..\sources\Box.h" />
     <ClInclude Include="..\sources\game.hpp" />
     <ClInclude Include="..\sources\gamebase.hpp" />
     <ClInclude Include="..\sources\GameEngine.h" />
@@ -148,6 +150,8 @@
     <ClInclude Include="..\sources\renderer.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\sources\Ball.cpp" />
+    <ClCompile Include="..\sources\Box.cpp" />
     <ClCompile Include="..\sources\game.cpp" />
     <ClCompile Include="..\sources\gamebase.cpp" />
     <ClCompile Include="..\sources\GameEngine.cpp" />
