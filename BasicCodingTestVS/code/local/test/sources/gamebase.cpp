@@ -25,18 +25,19 @@ gameengine to clean the creating of window and keyboard handling
 #include "GameEngine.h"
 int main(  )
 {
-
 	MapEngine* map = new MapEngine();
-	map->LoadMap();
+	GameEngine* engine = new GameEngine();
+
+
+	map->LoadMap(1);
 	cout << "printing the map !!\n";
 	map->PrintMap();
 
-	GameEngine* engine = new GameEngine();
-
-	engine->GenerateMap(map->GetMap());
-
 	Player* p = engine->AddPlayer();
 	Ball* ball = engine->AddBall();
+
+	engine->StartLevel(1,map->GetMap());
+
 	/*SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window* pWindow = SDL_CreateWindow("Game",
@@ -93,7 +94,12 @@ int main(  )
 
 		unsigned int time = SDL_GetTicks();
 		float timeStep = (time - lastTime) / 1000.0f;
+		
+		if(timeStep>=10){
 		lastTime = time;
+		engine->BoxesGoDown();
+		ball->SpeedUp(1);
+		}
 		//pGame->update(timeStep, mouseX, mouseY, mousePressed);
 		//pGame->render(renderer);
 

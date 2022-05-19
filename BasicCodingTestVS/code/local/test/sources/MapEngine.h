@@ -17,7 +17,7 @@ protected:
 public:
 	MapEngine();
 	~MapEngine();
-	void LoadMap();
+	void LoadMap(int level);
 	void SaveMap();
 	vector<vector<char>>* GetMap();
 	void PrintMap();

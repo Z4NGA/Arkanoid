@@ -13,3 +13,8 @@ void Ball::SetStrength(int x) {
 int Ball::GetStrength() {
 	return ballStrength;
 }
+
+void Ball::SpeedUp(int i) {
+	VelocityX = VelocityX < 0 ? VelocityX - i : VelocityX + i;
+	VelocityY = VelocityY < 0 ? VelocityY - i : VelocityY + i;
+}

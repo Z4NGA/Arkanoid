@@ -24,6 +24,7 @@ protected:
 	Player* player;
 	Ball* ball;
 	vector<Box*>* targetableObjects;
+	int level;
 public:
 	//reserving 750*500 for game map rest for player and ui
 	static const int ScreenWidth = 900, ScreenHeight = 900;
@@ -47,6 +48,10 @@ public:
 	Ball* GetBall();
 	void DrawBorder(float x, float y, float w, float h, Renderer::Color c);
 	void DrawBorder(float w, float h, Renderer::Color c);
+	void BoxesGoDown();
+	void StartLevel(int i, vector<vector<char>>* mapConfig);
+	void ResetPlayer();
+	void ResetBall();
 };
 
 

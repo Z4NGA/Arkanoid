@@ -3,6 +3,7 @@
 GameEngine::GameEngine() {
     CreateWindow();
     CreateRenderer(render_flags);
+    level = 1;
 }
 GameEngine::~GameEngine() {
 }
@@ -55,9 +56,9 @@ bool GameEngine::HandleCollision(Object* o, Object* collider) {
     if (isColliding) {
         if (t1<(t2 + collisionTolerance) || b1>(b2 - collisionTolerance))//invert velocity in case ball hit by the top or bott of palyer
             o->VelocityY = -o->VelocityY;
-        if ((ballCenterX < colliderCenterX && o->VelocityX > 0) || (ballCenterX > colliderCenterX && o->VelocityX < 0)) {
+        if ((ballCenterX < colliderCenterX && o->VelocityX > 0) || (ballCenterX > colliderCenterX && o->VelocityX < 0)) 
             o->VelocityX = -o->VelocityX; //invert the x velocity based on the hit position
-        }
+        
     }
     return isColliding;
 }
@@ -117,7 +118,11 @@ void GameEngine::HandleBorderCollision(Object* o)
                 if (HandleCollision(o, box)) {
                     cout << "handling box collision\n";
                     box->DamageBox(((Ball*)o)->GetStrength());
-
+                    player->UpdateScore();
+                    if(box->boxState==Box::DESTROYED){
+                        player->UpdateScore(10 * (int)box->boxType+10);
+                        player->AddCoins(50*(int)box->boxType+50);
+                    }
                 }
             }
         }
@@ -156,6 +161,7 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
             switch (ch)
             {
             case 'e':
+            case ' ':
                 objectTemp = new Object(Renderer::BLACK, Object::Empty);
                 objectTemp->SetSize(25, 25);
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
@@ -172,7 +178,7 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
                 gameMap->at(i)->push_back(objectTemp);
                 boxTemp = (Box*)objectTemp;
-                boxTemp->SetBoxColor(ch);
+                boxTemp->SetBoxColorAndType(ch);
                 boxTemp->SetBoxHp(ch);
                 targetableObjects->push_back(boxTemp);
                 break;
@@ -239,7 +245,7 @@ void GameEngine::ClearAndRender() {
                 if (((Box*)o)->boxState != Box::DESTROYED)
                     o->DrawObject(rend);
             }
-            else    o->DrawObject(rend);
+            //else    o->DrawObject(rend);
         }
     }
 
@@ -293,4 +299,24 @@ Player* GameEngine::GetPlayer() {
 
 Ball* GameEngine::GetBall() {
     return ball;
+}
+
+void GameEngine::BoxesGoDown() {
+    for (auto box : *targetableObjects) {
+        box->transform.y += box->fixedSize;
+    }
+}
+
+void GameEngine::StartLevel(int i, vector<vector<char>>* mapConfig) {
+    GenerateMap(mapConfig);
+    level = i;
+}
+void GameEngine::ResetPlayer() {
+    player->SetPosition((GameSpaceWidth - player->transform.w) / 2, 800);//centered x, fixed y for now
+    player->SetHp(5);
+}
+void GameEngine::ResetBall() {
+    ball->SetPosition((GameSpaceWidth - ball->transform.w) / 2, 750);//centered x, fixed y for now
+    ball->isMoving = true;
+    ball->SetVelocity(0, 0);
 }

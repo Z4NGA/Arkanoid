@@ -32,8 +32,8 @@ public:
 	void SetBoxHp(int hp);
 	void SetBoxHp(char ch);
 	int GetBoxHp();
-	void SetBoxColor(char ch);
-	void UpdateBoxColorAndType();
+	void SetBoxColorAndType(char ch);
+	void UpdateBoxColor();
 };
 
 

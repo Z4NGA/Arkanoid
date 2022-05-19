@@ -1,6 +1,6 @@
-﻿  Box.cpp
-  GameEngine.cpp
-  gamebase.cpp
+﻿  gamebase.cpp
+  MapEngine.cpp
+  Player.cpp
   Generating Code...
   CodingTest.vcxproj -> D:\C++ Games & Projects\BasicCodingTestVS\GameTest_Arkanoid\BasicCodingTestVS\code\local\test\build\Debug\CodingTest.exe
           1 file(s) copied.
