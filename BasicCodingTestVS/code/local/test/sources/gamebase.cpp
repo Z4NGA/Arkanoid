@@ -109,12 +109,15 @@ int main(  )
 		}
 		if (engine->CheckWinCondition()) {
 			engine->level++;
-			if (engine->level > 7)running = false;
+			if (engine->level > 7) { 
+				cout << "##########################\nYOU WIN THE GAME !!!!!!!\n###############################";
+				running = false;
+			}
 			map->LoadMap(engine->level);
 			engine->StartLevel(engine->level, map->GetMap());
 		}
 		if (engine->CheckLoseCondition()) {
-			cout << "##########################\nYOU LOSE !!!!!!!\n###############################";
+			cout << "##########################\nYOU LOSE THE GAME !!!!!!!\n###############################";
 			running = false;
 		}
 		//pGame->update(timeStep, mouseX, mouseY, mousePressed);
