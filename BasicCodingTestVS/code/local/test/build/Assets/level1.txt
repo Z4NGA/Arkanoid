@@ -1,6 +1,3 @@
                    
-  bbbbbb    bbbbb  
-    bbbbbbbbbbb    
-       bbbbbb
-          aa       
-bbbbbbbbbbbbbbbbbbb
+  bbbbbbbbbbbbbb
+    bbbbbbbbbbbbbb

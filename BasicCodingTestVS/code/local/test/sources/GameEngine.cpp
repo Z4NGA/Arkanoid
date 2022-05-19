@@ -88,6 +88,8 @@ void GameEngine::HandleBorderCollision(Object* o)
         }
         // bottom boundary
         if (o->transform.y + o->transform.h > GameSpaceHeight) {
+            player->SetHp(player->GetHp() - 1);
+            cout << "Ball touch the ground -1 HP !!!\n";
             o->transform.y = GameSpaceHeight - o->transform.h;
             o->VelocityY = -o->VelocityY;
             //isPlaying = false;
@@ -99,24 +101,13 @@ void GameEngine::HandleBorderCollision(Object* o)
             o->VelocityY = -o->VelocityY;
             return;
         }
-        // ball-to-player collision detection
-        /*bool isColliding = true;
-        if (r1<l2 || l1>r2 || t1 > b2 || b1 < t2)//easier to find when they don't collide
-            isColliding = false;
-        if (isColliding) {
-            if (t1<(t2 + collisionTolerance) || b1>(b2 - collisionTolerance))//invert velocity in case ball hit by the top or bott of palyer
-                o->VelocityY = -o->VelocityY;
-            if ((ballCenterX < playerCenterX && o->VelocityX > 0) || (ballCenterX > playerCenterX && o->VelocityX < 0)) {
-                o->VelocityX = -o->VelocityX; //invert the x velocity based on the hit position
-            }
-        }*/
 
         //vector<Box*>::iterator q = targetableObjects->begin();
         for (auto box : *targetableObjects) {
             if (box->boxState != Box::DESTROYED) {
                 //targetableObjects->erase(q);
                 if (HandleCollision(o, box)) {
-                    cout << "handling box collision\n";
+                    //cout << "handling box collision\n";
                     box->DamageBox(((Ball*)o)->GetStrength());
                     player->UpdateScore();
                     if(box->boxState==Box::DESTROYED){
@@ -308,6 +299,8 @@ void GameEngine::BoxesGoDown() {
 }
 
 void GameEngine::StartLevel(int i, vector<vector<char>>* mapConfig) {
+    ResetPlayer();
+    ResetBall();
     GenerateMap(mapConfig);
     level = i;
 }
@@ -319,4 +312,23 @@ void GameEngine::ResetBall() {
     ball->SetPosition((GameSpaceWidth - ball->transform.w) / 2, 750);//centered x, fixed y for now
     ball->isMoving = true;
     ball->SetVelocity(0, 0);
+}
+bool GameEngine::CheckWinCondition() {
+    for (auto box : *targetableObjects) {
+        if (box->boxState != Box::DESTROYED) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool GameEngine::CheckLoseCondition() {
+    return player->GetHp() <= 0;
+}
+void GameEngine::ShootBullet() {
+    auto bullet = new Object(Renderer::WHITE, Object::BULLET);
+    bullet->SetSize(3, 3, false);
+    bullet->SetPosition(player->transform.w / 2, player->transform.y-3);//centered x, fixed y for now
+    bullet->SetVelocity(0, -10);
+    player->shootCooldown = true;
 }

@@ -44,10 +44,8 @@ void Object::Move(GameEvent e)
 		Move(2*fixedSize, 0);
 		break;
 	case GameEvent::MOVE_UP:
-		Move(0, -fixedSize);
 		break;
 	case GameEvent::MOVE_DOWN:
-		Move(0, fixedSize);
 		break;
 	case GameEvent::ATTACK:
 		std::cout << "Pressed the Attacking BTN !!" << std::endl;

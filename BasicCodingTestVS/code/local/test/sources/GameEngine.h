@@ -11,7 +11,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
-
 using namespace std;
 
 class GameEngine
@@ -24,8 +23,10 @@ protected:
 	Player* player;
 	Ball* ball;
 	vector<Box*>* targetableObjects;
-	int level;
+	Object* bullet;
+	
 public:
+	int level;
 	//reserving 750*500 for game map rest for player and ui
 	static const int ScreenWidth = 900, ScreenHeight = 900;
 	static const int GameSpaceWidth = 500, GameSpaceHeight = 850;
@@ -52,6 +53,9 @@ public:
 	void StartLevel(int i, vector<vector<char>>* mapConfig);
 	void ResetPlayer();
 	void ResetBall();
+	bool CheckWinCondition();
+	bool CheckLoseCondition();
+	void ShootBullet();
 };
 
 

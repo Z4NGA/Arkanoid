@@ -68,6 +68,13 @@ int main(  )
 				if(event.key.keysym.sym == SDLK_ESCAPE) {
 					running = false;
 				}
+				else if (event.key.keysym.sym == SDLK_SPACE) {
+					cout << "shooting now\n";
+					if (!engine->GetPlayer()->shootCooldown) {
+						engine->ShootBullet();
+						engine->GetPlayer()->shootCooldown = true;
+					}
+				}
 				else engine->GetPlayer()->Move(engine->HandleKeyboard(event));
 				break;
 			case SDL_MOUSEMOTION:
@@ -99,6 +106,16 @@ int main(  )
 		lastTime = time;
 		engine->BoxesGoDown();
 		ball->SpeedUp(1);
+		}
+		if (engine->CheckWinCondition()) {
+			engine->level++;
+			if (engine->level > 7)running = false;
+			map->LoadMap(engine->level);
+			engine->StartLevel(engine->level, map->GetMap());
+		}
+		if (engine->CheckLoseCondition()) {
+			cout << "##########################\nYOU LOSE !!!!!!!\n###############################";
+			running = false;
 		}
 		//pGame->update(timeStep, mouseX, mouseY, mousePressed);
 		//pGame->render(renderer);

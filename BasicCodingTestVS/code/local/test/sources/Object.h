@@ -19,6 +19,7 @@ public:
 		BOOST,
 		BALL,
 		UI_BUTTON,
+		BULLET,
 	};
 	int VelocityX, VelocityY;
 	bool isMoving;
