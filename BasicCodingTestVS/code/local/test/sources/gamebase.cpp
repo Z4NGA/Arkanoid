@@ -30,7 +30,7 @@ int main(  )
 
 
 	map->LoadMap(1);
-	cout << "printing the map !!\n";
+	
 	map->PrintMap();
 
 	Player* p = engine->AddPlayer();
@@ -54,7 +54,7 @@ int main(  )
 	float mouseX = 256;
 	float mouseY = 256;
 	bool mousePressed = false;
-
+	cout << "Click on the mouse button to start !!!\n Destroy All blocks to go to the next level\n move using the arrows\n once the ball stops click on the mouse to continue\n use escape to leave\n You start with 5 Hp and lose 1 if the ball touch the floor\nearn score and points by destroying the blocks\n";
 	bool running = engine->isPlaying;
 	unsigned int lastTime = SDL_GetTicks();
 	while(running & engine->isPlaying) {

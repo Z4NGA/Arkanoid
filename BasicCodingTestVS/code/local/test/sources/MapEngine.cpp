@@ -42,7 +42,7 @@ void MapEngine::LoadMap(int level) {
 			auto temp = new vector<char>();
 			map->push_back(*temp);
 			getline(fromFile, ss);
-			cout << ss << endl;
+			//cout << ss << endl;
 			for (auto ch : ss)
 			{
 				map->at(lineIndex).push_back(ch);
