@@ -11,7 +11,7 @@ Box::Box(Renderer::Color c, ObjectType ot) : Object(c, ot) {
 
 
 void Box::DamageBox(int dmg) {
-	if(boxHp!=NULL & boxHp>0) boxHp-= dmg;
+	if(boxHp!=NULL && boxHp>0) boxHp-= dmg;
 	if (boxHp <= 0) boxState = DESTROYED;
 	else boxState = DAMAGED;
 }

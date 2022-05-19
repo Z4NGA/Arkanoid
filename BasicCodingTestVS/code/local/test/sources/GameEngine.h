@@ -24,7 +24,7 @@ protected:
 public:
 	//reserving 750*500 for game map rest for player and ui
 	static const int ScreenWidth = 900, ScreenHeight = 900;
-	static const int GameSpaceWidth = 500, GameSpaceHeight = ScreenHeight;
+	static const int GameSpaceWidth = 500, GameSpaceHeight = 850;
 	bool isPlaying = true;
 	GameEngine();
 	~GameEngine();
@@ -41,6 +41,8 @@ public:
 	Player* AddPlayer();
 	Ball* AddBall();
 	Ball* GetBall();
+	void DrawBorder(float x, float y, float w, float h, Renderer::Color c);
+	void DrawBorder(float w, float h, Renderer::Color c);
 };
 
 

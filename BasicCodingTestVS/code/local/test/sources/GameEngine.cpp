@@ -163,6 +163,30 @@ Ball* GameEngine::AddBall() {
     return ball;
 }
 
+void GameEngine::DrawBorder(float x, float y, float w, float h, Renderer::Color c) {
+    SDL_SetRenderDrawColor(rend, (Uint8)((c >> 16) & 255), (Uint8)((c >> 8) & 255), (Uint8)(c & 255), (Uint8)255);
+    SDL_Rect rect;
+    rect.x = (int)x;
+    rect.y = (int)y;
+    rect.w = (int)w;
+    rect.h = (int)h;
+    SDL_RenderFillRect(rend, &rect);
+}
+void GameEngine::DrawBorder(float w, float h, Renderer::Color c) {
+    SDL_SetRenderDrawColor(rend, (Uint8)((c >> 16) & 255), (Uint8)((c >> 8) & 255), (Uint8)(c & 255), (Uint8)255);
+    SDL_Rect botRect,rightRect;
+    rightRect.x = (int)w;
+    rightRect.y = 0;
+    rightRect.w = 5;
+    rightRect.h = (int)h;
+    botRect.x = 0;
+    botRect.y = (int)h;
+    botRect.w = (int)w;
+    botRect.h = 5;
+    SDL_RenderFillRect(rend, &rightRect);
+    SDL_RenderFillRect(rend, &botRect);
+}
+
 void GameEngine::ClearAndRender() {
     SDL_RenderClear(rend);
     //change for all objects
@@ -177,6 +201,7 @@ void GameEngine::ClearAndRender() {
     //simulating a higher layer Zposition
     player->DrawObject(rend);
     ball->DrawObject(rend);
+    DrawBorder(GameSpaceWidth, GameSpaceHeight, Renderer::WHITE);
     //reset draw color to black
     SDL_SetRenderDrawColor(this->rend, 1, 1, 1, 1);
     // triggers the double buffers
