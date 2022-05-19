@@ -102,6 +102,5 @@ int main(  )
 
 	//clean & shutdown
 	engine->ShutDown();
-
 	return 0;
 }

@@ -36,6 +36,31 @@ GameEvent GameEngine::HandleKeyboard(SDL_Event event) {
     }
 }
 
+bool GameEngine::HandleCollision(Object* o, Object* collider) {
+    //generalized the player to ball collision to work on other objects
+    int ballX = o->transform.x, ballY = o->transform.y, colliderX = collider->transform.x, colliderY = collider->transform.y;
+    int ballW = o->transform.w, ballH = o->transform.h, colliderW = collider->transform.w, colliderH = collider->transform.h;
+    int r1 = ballX + ballW, r2 = colliderX + colliderW, l1 = ballX, l2 = colliderX, t1 = ballY, t2 = colliderY, b1 = ballY + ballH, b2 = colliderY + colliderH;
+    //left, right top botom positions for both objects
+    int ballCenterX = (ballX + ballW) / 2;
+    int colliderCenterX = (colliderX + colliderW) / 2;
+    const int collisionTolerance = 3;//this is to be tolerant with collision to colliders
+
+    bool isColliding = true;
+    if (r1<l2 || l1>r2 || t1 > b2 || b1 < t2)//easier to find when they don't collide
+    {
+        //isColliding = false;
+        return false;
+    }
+    if (isColliding) {
+        if (t1<(t2 + collisionTolerance) || b1>(b2 - collisionTolerance))//invert velocity in case ball hit by the top or bott of palyer
+            o->VelocityY = -o->VelocityY;
+        if ((ballCenterX < colliderCenterX && o->VelocityX > 0) || (ballCenterX > colliderCenterX && o->VelocityX < 0)) {
+            o->VelocityX = -o->VelocityX; //invert the x velocity based on the hit position
+        }
+    }
+    return isColliding;
+}
 void GameEngine::HandleBorderCollision(Object* o)
 {
     if(o->type == Object::BALL){
@@ -46,7 +71,7 @@ void GameEngine::HandleBorderCollision(Object* o)
         //left, right top botom positions for both objects
         int ballCenterX = (ballX + ballW) / 2;
         int playerCenterX = (playerX + playerW) / 2;
-        const int collisionTolerance = 5;//this is to be tolerant with players saving the ball at the last second
+        const int collisionTolerance = 3;//this is to be tolerant with players saving the ball at the last second
 
         // Map Collision
         if (o->transform.x + o->transform.w > GameSpaceWidth) {
@@ -74,7 +99,7 @@ void GameEngine::HandleBorderCollision(Object* o)
             return;
         }
         // ball-to-player collision detection
-        bool isColliding = true;
+        /*bool isColliding = true;
         if (r1<l2 || l1>r2 || t1 > b2 || b1 < t2)//easier to find when they don't collide
             isColliding = false;
         if (isColliding) {
@@ -83,7 +108,20 @@ void GameEngine::HandleBorderCollision(Object* o)
             if ((ballCenterX < playerCenterX && o->VelocityX > 0) || (ballCenterX > playerCenterX && o->VelocityX < 0)) {
                 o->VelocityX = -o->VelocityX; //invert the x velocity based on the hit position
             }
+        }*/
+
+        //vector<Box*>::iterator q = targetableObjects->begin();
+        for (auto box : *targetableObjects) {
+            if (box->boxState != Box::DESTROYED) {
+                //targetableObjects->erase(q);
+                if (HandleCollision(o, box)) {
+                    cout << "handling box collision\n";
+                    box->DamageBox(((Ball*)o)->GetStrength());
+
+                }
+            }
         }
+        HandleCollision(o, player);
         return;
     }
     switch (o->type) {
@@ -106,6 +144,7 @@ void GameEngine::HandleBorderCollision(Object* o)
 void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
 {
     gameMap = new vector<vector<Object*>*>();
+    targetableObjects = new vector<Box*>();
     for (size_t i = 0; i < mapConfig->size(); i++)
     {
         auto xPosIndex = 0;
@@ -113,6 +152,7 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
         for (auto ch : mapConfig->at(i))
         {
             Object* objectTemp;
+            Box* boxTemp;
             switch (ch)
             {
             case 'e':
@@ -121,20 +161,21 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
                 gameMap->at(i)->push_back(objectTemp);
                 break;
-            case 'b':
-                objectTemp = new Object(Renderer::BLUE, Object::BOX);
+            case 'b': //normal box
+            case 'a': //armored box
+            case 'm': //metal box
+            case 'h': //hard to break box
+            case 'v': //very hard to break box
+            case 'x': //extremely hard to break box
+                objectTemp = new Box(Renderer::YELLOW, Object::BOX);
                 objectTemp->SetSize(25, 25);
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
                 gameMap->at(i)->push_back(objectTemp);
+                boxTemp = (Box*)objectTemp;
+                boxTemp->SetBoxColor(ch);
+                boxTemp->SetBoxHp(ch);
+                targetableObjects->push_back(boxTemp);
                 break;
-            /*case 'p':
-                objectTemp = new Player(Renderer::RED, Object::PLAYER);
-                objectTemp->SetSize(25, 25);
-                objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
-                player = (Player*)objectTemp;
-                gameMap->at(i)->push_back(objectTemp);
-                break;
-                */
             default:
                 objectTemp = new Object(Renderer::BLACK, Object::Empty);
                 objectTemp->SetSize(25, 25);
@@ -194,7 +235,11 @@ void GameEngine::ClearAndRender() {
     {
         for (Object* o : *(gameMap->at(i)))
         {
-                o->DrawObject(rend);
+            if (o->type == Object::BOX) {
+                if (((Box*)o)->boxState != Box::DESTROYED)
+                    o->DrawObject(rend);
+            }
+            else    o->DrawObject(rend);
         }
     }
 

@@ -7,7 +7,9 @@
 #include "Player.h"
 #include "GameEvent.h"
 #include "Ball.h"
+#include "Box.h"
 #include <cstdlib>
+#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -21,6 +23,7 @@ protected:
 	vector<vector<Object*>*>* gameMap;
 	Player* player;
 	Ball* ball;
+	vector<Box*>* targetableObjects;
 public:
 	//reserving 750*500 for game map rest for player and ui
 	static const int ScreenWidth = 900, ScreenHeight = 900;
@@ -35,6 +38,7 @@ public:
 	SDL_Renderer* GetRenderer();
 	GameEvent HandleKeyboard(SDL_Event event);
 	void HandleBorderCollision(Object* o);
+	bool HandleCollision(Object* o, Object* collider);
 	void GenerateMap(vector<vector<char>>* mapConfig);
 	void ClearAndRender();
 	Player* GetPlayer();

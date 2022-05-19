@@ -11,13 +11,58 @@ Box::Box(Renderer::Color c, ObjectType ot) : Object(c, ot) {
 
 
 void Box::DamageBox(int dmg) {
-	if(boxHp!=NULL && boxHp>0) boxHp-= dmg;
-	if (boxHp <= 0) boxState = DESTROYED;
-	else boxState = DAMAGED;
+	if (boxState == DESTROYED)return;
+	boxHp-= dmg;
+	if (boxHp <= 0) {
+		boxState = DESTROYED;
+		return;
+	}
+	UpdateBoxColorAndType();
+	boxState = DAMAGED;
+
 }
 void Box::SetBoxHp(int hp) {
 	boxHp = hp;
 }
+void Box::SetBoxHp(char ch) {
+	boxHp = (ch == 'x') ? 7 : (ch == 'v') ? 5 : (ch == 'h') ? 4 : (ch == 'm') ? 3 : (ch == 'a') ? 2 : 1;
+}
 int Box::GetBoxHp() {
 	return boxHp;
+}
+void Box::SetBoxColor(char ch) {
+	color = (ch == 'x') ? Renderer::DARK_MAGENTA
+		: (ch == 'v') ? Renderer::MAGENTA
+		: (ch == 'h') ? Renderer::DARK_BLUE
+		: (ch == 'm') ? Renderer::BLUE
+		: (ch == 'a') ? Renderer::DARK_YELLOW
+		: Renderer::YELLOW;
+}
+void Box::UpdateBoxColorAndType() {
+	switch (boxHp) {
+	case 1:
+		color = Renderer::YELLOW;
+		boxType = NORMAL;
+		break;
+	case 2:
+		color = Renderer::DARK_YELLOW;
+		boxType = ARMORED;
+		break;
+	case 3:
+		color = Renderer::BLUE;
+		boxType = METAL;
+		break;
+	case 4:
+		color = Renderer::DARK_BLUE;
+		boxType = HARD;
+		break;
+	case 5:
+		color = Renderer::MAGENTA;
+		boxType = VERY_HARD;
+		break;
+	case 7:
+		color = Renderer::DARK_MAGENTA;
+		boxType = XTREME;
+		break;
+	}
 }
