@@ -28,6 +28,7 @@ public:
 	BoxType boxType;
 	Box();
 	Box(Renderer::Color c, ObjectType ot);
+	Box(SDL_Renderer* rend, const char* assetPath, ObjectType ot);
 	void DamageBox(int dmg);
 	void SetBoxHp(int hp);
 	void SetBoxHp(char ch);

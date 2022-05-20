@@ -33,8 +33,8 @@ int main(  )
 	
 	map->PrintMap();
 
-	Player* p = engine->AddPlayer();
-	Ball* ball = engine->AddBall();
+	Player* p = engine->AddPlayer(true);
+	Ball* ball = engine->AddBall(true);
 
 	engine->StartLevel(1,map->GetMap());
 

@@ -12,7 +12,13 @@ Player::Player(Renderer::Color c, ObjectType ot) :
 	coins = 0;
 	UpdateScoreBoard();
 }
-
+Player::Player(SDL_Renderer* rend, const char* assetPath, ObjectType ot) : Object(rend,assetPath,ot) {
+	shootCooldown = false;
+	hp = 5;
+	score = 0;
+	coins = 0;
+	UpdateScoreBoard();
+}
 void Player::UpdateScore(int i) {
 	score += i;
 	UpdateScoreBoard();

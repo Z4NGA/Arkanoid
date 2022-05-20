@@ -8,7 +8,10 @@ Box::Box(Renderer::Color c, ObjectType ot) : Object(c, ot) {
 	boxHp = 1;
 	boxState = FULL_HP;
 }
-
+Box::Box(SDL_Renderer* rend, const char* assetPath, ObjectType ot) : Object(rend, assetPath, ot) {
+	boxHp = 1;
+	boxState = FULL_HP;
+}
 
 void Box::DamageBox(int dmg) {
 	if (boxState == DESTROYED)return;

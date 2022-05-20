@@ -18,6 +18,7 @@ protected:
 public:
 	bool shootCooldown;
 	Player();
+	Player(SDL_Renderer* rend, const char* assetPath, ObjectType ot);
 	Player(Renderer::Color c, ObjectType ot);
 	void UpdateScore(int i = 5);
 	void AddCoins(int i = 50);
