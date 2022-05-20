@@ -1,5 +1,8 @@
 # GameTest_Arkanoid
- Test for implementing Arkanoid using c++ & sdl
+### Main Branch
+- Test for implementing Arkanoid using c++ & the provided sdl library (only using colors)
+### Additional Implementation Branch
+- Improved version of the implementation of Arkanoid using sdl and sdl_image library (using texture and icons)
 ### Tutorial
 #### Movements
 - To start each level press the left mouse button
