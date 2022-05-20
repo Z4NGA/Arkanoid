@@ -261,6 +261,12 @@ void GameEngine::ClearAndRender() {
 
     //simulating a higher layer Zposition
     player->DrawObject(rend);
+    //draw player hp
+    for (auto o : *(player->playerHpObjects))
+    {
+        o->DrawObject(rend);
+    }
+    //draw ball
     ball->DrawObject(rend);
     DrawBorder(GameSpaceWidth, GameSpaceHeight, Renderer::WHITE);
     //reset draw color to black

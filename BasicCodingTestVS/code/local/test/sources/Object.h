@@ -31,6 +31,7 @@ public:
 		COLOR,
 		TEXTURE
 	};
+	bool isActive;
 	RenderType renderType;
 	int VelocityX, VelocityY;
 	bool isMoving;

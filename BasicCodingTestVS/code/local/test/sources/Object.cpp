@@ -8,6 +8,7 @@ Object::Object(Renderer::Color c, Object::ObjectType ot) {
 	VelocityX = 0;
 	VelocityY = 0;
 	isMoving = false;
+	isActive = true;
 	renderType = COLOR;
 }
 
@@ -25,6 +26,7 @@ Object::Object(SDL_Renderer* rend, const char* assetPath, ObjectType ot) {
 	VelocityX = 0;
 	VelocityY = 0;
 	isMoving = false;
+	isActive = true;
 	renderType = TEXTURE;
 }
 void Object::ChangeTexture(SDL_Renderer* rend, const char* assetPath) {
@@ -35,12 +37,14 @@ void Object::ChangeTexture(SDL_Renderer* rend, const char* assetPath) {
 	texture = SDL_CreateTextureFromSurface(rend, surface);
 }
 void Object::DrawObject(SDL_Renderer* rend) {
-	if (renderType == COLOR) {
-		SDL_SetRenderDrawColor(rend, (Uint8)((color >> 16) & 255), (Uint8)((color >> 8) & 255), (Uint8)(color & 255), (Uint8)255);
-		SDL_RenderFillRect(rend, &transform);
-	}
-	else {
-		SDL_RenderCopy(rend, texture, NULL, &transform);
+	if (isActive) {
+		if (renderType == COLOR) {
+			SDL_SetRenderDrawColor(rend, (Uint8)((color >> 16) & 255), (Uint8)((color >> 8) & 255), (Uint8)(color & 255), (Uint8)255);
+			SDL_RenderFillRect(rend, &transform);
+		}
+		else {
+			SDL_RenderCopy(rend, texture, NULL, &transform);
+		}
 	}
 }
 Object::~Object() {
