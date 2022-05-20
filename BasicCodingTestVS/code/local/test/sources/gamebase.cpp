@@ -83,7 +83,7 @@ int main(  )
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				mousePressed = true;
-				engine->GetBall()->SetVelocity(5, -5);
+				if(engine->GetBall()->VelocityX==0 && engine->GetBall()->VelocityY == 0) engine->GetBall()->SetVelocity(5, -5);
 				break;
 			case SDL_MOUSEBUTTONUP:
 				mousePressed = false;

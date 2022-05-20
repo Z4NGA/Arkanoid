@@ -27,7 +27,13 @@ Object::Object(SDL_Renderer* rend, const char* assetPath, ObjectType ot) {
 	isMoving = false;
 	renderType = TEXTURE;
 }
-
+void Object::ChangeTexture(SDL_Renderer* rend, const char* assetPath) {
+	SDL_Surface* surface;
+	// please provide a path for your image
+	surface = IMG_Load(assetPath);
+	// loads image to our graphics hardware memory.
+	texture = SDL_CreateTextureFromSurface(rend, surface);
+}
 void Object::DrawObject(SDL_Renderer* rend) {
 	if (renderType == COLOR) {
 		SDL_SetRenderDrawColor(rend, (Uint8)((color >> 16) & 255), (Uint8)((color >> 8) & 255), (Uint8)(color & 255), (Uint8)255);

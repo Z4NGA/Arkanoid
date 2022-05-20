@@ -41,6 +41,7 @@ public:
 	Object();
 	Object(Renderer::Color c, ObjectType ot);
 	Object(SDL_Renderer* rend, const char* assetPath, ObjectType ot);
+	void ChangeTexture(SDL_Renderer* rend, const char* assetPath);
 	~Object();
 	void SetSize(int w, int h,bool fixedSize=true);
 	void SetPosition(int x, int y);

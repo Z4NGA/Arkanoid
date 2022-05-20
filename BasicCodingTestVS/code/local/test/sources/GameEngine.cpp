@@ -108,7 +108,7 @@ void GameEngine::HandleBorderCollision(Object* o)
                 //targetableObjects->erase(q);
                 if (HandleCollision(o, box)) {
                     //cout << "handling box collision\n";
-                    box->DamageBox(((Ball*)o)->GetStrength());
+                    box->DamageBox(rend, ((Ball*)o)->GetStrength());
                     player->UpdateScore();
                     if(box->boxState==Box::DESTROYED){
                         player->UpdateScore(10 * (int)box->boxType+10);
@@ -164,13 +164,14 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
             case 'h': //hard to break box
             case 'v': //very hard to break box
             case 'x': //extremely hard to break box
-                objectTemp = new Box(Renderer::YELLOW, Object::BOX);
+                objectTemp = new Box(rend,"Assets/block_normal.png", Object::BOX);
                 objectTemp->SetSize(16, 16);
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
                 gameMap->at(i)->push_back(objectTemp);
                 boxTemp = (Box*)objectTemp;
-                boxTemp->SetBoxColorAndType(ch);
                 boxTemp->SetBoxHp(ch);
+                boxTemp->SetBoxColorAndType(ch);
+                boxTemp->UpdateBoxColorAndTexture(rend);
                 targetableObjects->push_back(boxTemp);
                 break;
             default:

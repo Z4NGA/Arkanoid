@@ -7,7 +7,13 @@ class Box :public Object {
 
 protected:
 	int boxHp;
-	
+	const char* normalBoxAsset = "Assets/block_normal.png";
+	const char* armoredBoxAsset = "Assets/block_armored.png";
+	const char* metalBoxAsset = "Assets/block_metal.png";
+	const char* hardBoxAsset = "Assets/block_hard.png";
+	const char* veryHardBoxAsset = "Assets/block_veryhard.png";
+	const char* extremeBoxAsset = "Assets/block_xtreme.png";
+	const char* specialBoxAsset = "Assets/block_special.png";
 public:
 	enum BoxState
 	{
@@ -29,12 +35,12 @@ public:
 	Box();
 	Box(Renderer::Color c, ObjectType ot);
 	Box(SDL_Renderer* rend, const char* assetPath, ObjectType ot);
-	void DamageBox(int dmg);
+	void DamageBox(SDL_Renderer* rend, int dmg);
 	void SetBoxHp(int hp);
 	void SetBoxHp(char ch);
 	int GetBoxHp();
 	void SetBoxColorAndType(char ch);
-	void UpdateBoxColor();
+	void UpdateBoxColorAndTexture(SDL_Renderer* rend);
 };
 
 
