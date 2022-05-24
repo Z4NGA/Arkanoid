@@ -52,7 +52,7 @@ int main(  )
 					cout << "shooting now\n";
 					if (!engine->GetPlayer()->shootCooldown) {
 						engine->ShootBullet();
-						engine->GetPlayer()->shootCooldown = true;
+						//engine->GetPlayer()->shootCooldown = true;
 					}
 				}
 				else if (event.key.keysym.sym == SDLK_l) {
@@ -74,9 +74,8 @@ int main(  )
 			}
 		}
 		//handling object physics
-		engine->GetBall()->Move(0, 0);
-		engine->HandleBorderCollision(engine->GetPlayer());
-		engine->HandleBorderCollision(engine->GetBall());
+		engine->MoveAllObjects();
+		engine->HandleAllCollisions();
 
 		engine->ClearAndRender();
 

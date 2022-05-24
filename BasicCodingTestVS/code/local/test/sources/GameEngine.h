@@ -27,7 +27,7 @@ protected:
 	Player* player;
 	Ball* ball;
 	vector<Box*>* targetableObjects;
-	Object* bullet;
+	vector<Object*>* bulletObjects=nullptr;
 public:
 	int level;
 	//reserving 864*512 for game map rest for player and ui
@@ -62,10 +62,11 @@ public:
 	* @return: an enum value of GameEvent depending on the user input
 	*/
 	GameEvent HandleKeyboard(SDL_Event event);
+	void HandleAllCollisions();
 	/*
 	* @brief: handles all general collisions for an object
 	*/
-	void HandleBorderCollision(Object* o);
+	void HandleSingleObjectCollision(Object* o);
 	/*
 	* @brief: handles a collision between 2 objects
 	* @return: true if objects collide, false otherwise
@@ -135,6 +136,8 @@ public:
 	* @brief: shoots a bullet from the player pad
 	*/
 	void ShootBullet();
+
+	void MoveAllObjects();
 };
 
 

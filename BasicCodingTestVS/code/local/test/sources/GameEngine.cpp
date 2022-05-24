@@ -62,8 +62,40 @@ bool GameEngine::HandleCollision(Object* o, Object* collider) {
     }
     return isColliding;
 }
-void GameEngine::HandleBorderCollision(Object* o)
+void GameEngine::HandleAllCollisions() {
+    if (player != nullptr) HandleSingleObjectCollision(player);
+    if (ball != nullptr) HandleSingleObjectCollision(ball);
+    if (bulletObjects != nullptr) 
+        for(auto bullet : *bulletObjects)
+            if(bullet->isActive)
+                HandleSingleObjectCollision(bullet);
+}
+
+void GameEngine::HandleSingleObjectCollision(Object* o)
 {
+    if (o->type == Object::BULLET) {
+        // upper boundary
+        if (o->transform.y < 0) {
+            o->isActive = false;
+            o->isMoving = false;
+            return;
+        }
+        for (auto box : *targetableObjects) {
+            if (box->boxState != Box::DESTROYED) {
+                //targetableObjects->erase(q);
+                if (HandleCollision(o, box)) {
+                    o->isActive = false;
+                    o->isMoving = false;
+                    box->DamageBox(rend, 1);
+                    player->UpdateScore();
+                    if (box->boxState == Box::DESTROYED) {
+                        player->UpdateScore(10 * (int)box->boxType + 10);
+                        player->AddCoins(50 * (int)box->boxType + 50);
+                    }
+                }
+            }
+        }
+    }
     if(o->type == Object::BALL){
         //simple positions calculations
         int ballX = o->transform.x, ballY = o->transform.y, playerX = player->transform.x, playerY = player->transform.y;
@@ -268,6 +300,11 @@ void GameEngine::ClearAndRender() {
     }
     //draw ball
     ball->DrawObject(rend);
+    //draw bullet
+    if (bulletObjects != nullptr) {
+        for(auto bullet : *bulletObjects)
+            bullet->DrawObject(rend);
+    }
     DrawBorder(GameSpaceWidth, GameSpaceHeight, Renderer::WHITE);
     //reset draw color to black
     SDL_SetRenderDrawColor(this->rend, 1, 1, 1, 1);
@@ -361,9 +398,21 @@ bool GameEngine::CheckLoseCondition() {
     return player->GetHp() <= 0;
 }
 void GameEngine::ShootBullet() {
-    auto bullet = new Object(Renderer::WHITE, Object::BULLET);
-    bullet->SetSize(3, 3, false);
-    bullet->SetPosition(player->transform.w / 2, player->transform.y-3);//centered x, fixed y for now
-    bullet->SetVelocity(0, -10);
-    player->shootCooldown = true;
+    if (bulletObjects == nullptr) bulletObjects = new vector<Object*>();
+    auto b = new Object(Renderer::WHITE, Object::BULLET);
+    b->SetSize(3, 3, false);
+    b->isMoving = true;
+    b->SetPosition((player->transform.w / 2)+player->transform.x, player->transform.y-3);//centered x, fixed y for now
+    b->SetVelocity(0, -10);
+    //player->shootCooldown = true;
+    bulletObjects->push_back(b);
+}
+
+void GameEngine::MoveAllObjects() {
+
+    ball->Move(0, 0);
+    if (bulletObjects != nullptr) {
+        for (auto bullet : *bulletObjects)
+            bullet->Move(0, 0);
+    }
 }

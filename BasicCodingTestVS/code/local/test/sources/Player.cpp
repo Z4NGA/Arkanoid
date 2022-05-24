@@ -6,6 +6,7 @@ Player::Player() :Object() {
 Player::Player(Renderer::Color c, ObjectType ot) :
 	Object(c, ot)
 {
+	canShoot = true;
 	shootCooldown = false;
 	hp = 5;
 	score = 0;
@@ -15,6 +16,7 @@ Player::Player(Renderer::Color c, ObjectType ot) :
 }
 Player::Player(SDL_Renderer* rend, const char* assetPath, ObjectType ot) : Object(rend,assetPath,ot)
 {
+	canShoot = true;
 	shootCooldown = false;
 	hp = 5;
 	score = 0;
