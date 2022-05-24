@@ -1,8 +1,6 @@
 # GameTest_Arkanoid
 ### Main Branch
-- Test for implementing Arkanoid using c++ & the provided sdl library (only using colors)
-### Additional Implementation Branch
-- Improved version of the implementation of Arkanoid using sdl and sdl_image library (using texture and icons)
+- A remake of Arkanoid/Breakout using sdl and sdl_image library (using texture and icons)
 ![image](https://user-images.githubusercontent.com/68614883/169434174-8d5c02e6-0b58-4d4d-8246-c0b928ff20c6.png)
 
 ### Tutorial
