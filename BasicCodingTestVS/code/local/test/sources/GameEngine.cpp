@@ -108,7 +108,7 @@ void GameEngine::HandleBorderCollision(Object* o)
                 //targetableObjects->erase(q);
                 if (HandleCollision(o, box)) {
                     //cout << "handling box collision\n";
-                    box->DamageBox(((Ball*)o)->GetStrength());
+                    box->DamageBox(rend, ((Ball*)o)->GetStrength());
                     player->UpdateScore();
                     if(box->boxState==Box::DESTROYED){
                         player->UpdateScore(10 * (int)box->boxType+10);
@@ -154,7 +154,7 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
             case 'e':
             case ' ':
                 objectTemp = new Object(Renderer::BLACK, Object::Empty);
-                objectTemp->SetSize(25, 25);
+                objectTemp->SetSize(16, 16);
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
                 gameMap->at(i)->push_back(objectTemp);
                 break;
@@ -164,18 +164,19 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
             case 'h': //hard to break box
             case 'v': //very hard to break box
             case 'x': //extremely hard to break box
-                objectTemp = new Box(Renderer::YELLOW, Object::BOX);
-                objectTemp->SetSize(25, 25);
+                objectTemp = new Box(rend,"Assets/block_normal.png", Object::BOX);
+                objectTemp->SetSize(16, 16);
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
                 gameMap->at(i)->push_back(objectTemp);
                 boxTemp = (Box*)objectTemp;
-                boxTemp->SetBoxColorAndType(ch);
                 boxTemp->SetBoxHp(ch);
+                boxTemp->SetBoxColorAndType(ch);
+                boxTemp->UpdateBoxColorAndTexture(rend);
                 targetableObjects->push_back(boxTemp);
                 break;
             default:
                 objectTemp = new Object(Renderer::BLACK, Object::Empty);
-                objectTemp->SetSize(25, 25);
+                objectTemp->SetSize(16, 16);
                 objectTemp->SetPosition(xPosIndex * objectTemp->fixedSize, i * objectTemp->fixedSize);
                 gameMap->at(i)->push_back(objectTemp);
                 break;
@@ -184,20 +185,38 @@ void GameEngine::GenerateMap(vector<vector<char>>* mapConfig)
         }
     }
 }
-Player* GameEngine::AddPlayer() {
-    auto objectTemp = new Player(Renderer::RED, Object::PLAYER);
-    objectTemp->SetSize(125, 25,false);
-    objectTemp->SetPosition((GameSpaceWidth-objectTemp->transform.w)  /2, 800);//centered x, fixed y for now
-    player = (Player*)objectTemp;
+Player* GameEngine::AddPlayer(bool withText) {
+    if (withText) {
+        cout << "asset path not none";
+        auto objectTemp = new Player(rend,"Assets/bar_gold_48_16.png", Object::PLAYER);
+        objectTemp->SetSize(48, 16, false);
+        objectTemp->SetPosition((GameSpaceWidth - objectTemp->transform.w) / 2, 800);//centered x, fixed y for now
+        player = (Player*)objectTemp;
+    }
+    else {
+        auto objectTemp = new Player(Renderer::RED, Object::PLAYER);
+        objectTemp->SetSize(48, 16, false);
+        objectTemp->SetPosition((GameSpaceWidth - objectTemp->transform.w) / 2, 800);//centered x, fixed y for now
+        player = (Player*)objectTemp;
+    }
     return player;
 }
 
-Ball* GameEngine::AddBall() {
-    auto objectTemp = new Ball(Renderer::GREEN, Object::BALL);
-    objectTemp->SetSize(15, 15, false);
-    objectTemp->SetPosition((GameSpaceWidth - objectTemp->transform.w) / 2, 750);//centered x, fixed y for now
-    objectTemp->isMoving = true;
-    ball = (Ball*) objectTemp;
+Ball* GameEngine::AddBall(bool withText) {
+    if (withText) {
+        auto objectTemp = new Ball(rend,"Assets/ball_gold_16_16.png", Object::BALL);
+        objectTemp->SetSize(16, 16, false);
+        objectTemp->SetPosition((GameSpaceWidth - objectTemp->transform.w) / 2, 750);//centered x, fixed y for now
+        objectTemp->isMoving = true;
+        ball = (Ball*)objectTemp;
+    }
+    else {
+        auto objectTemp = new Ball(Renderer::GREEN, Object::BALL);
+        objectTemp->SetSize(16, 16, false);
+        objectTemp->SetPosition((GameSpaceWidth - objectTemp->transform.w) / 2, 750);//centered x, fixed y for now
+        objectTemp->isMoving = true;
+        ball = (Ball*)objectTemp;
+    }
     return ball;
 }
 
@@ -242,6 +261,12 @@ void GameEngine::ClearAndRender() {
 
     //simulating a higher layer Zposition
     player->DrawObject(rend);
+    //draw player hp
+    for (auto o : *(player->playerHpObjects))
+    {
+        o->DrawObject(rend);
+    }
+    //draw ball
     ball->DrawObject(rend);
     DrawBorder(GameSpaceWidth, GameSpaceHeight, Renderer::WHITE);
     //reset draw color to black
@@ -271,7 +296,17 @@ void GameEngine::CreateRenderer(Uint32 flags) {
 
 void GameEngine::ShutDown()
 {
-    
+    for (auto o : *targetableObjects) {
+        if (o->renderType == Object::TEXTURE) {
+            SDL_DestroyTexture(o->texture);
+        }
+    }
+    if (player->renderType == Object::TEXTURE) {
+        SDL_DestroyTexture(player->texture);
+    }
+    if (ball->renderType == Object::TEXTURE) {
+        SDL_DestroyTexture(ball->texture);
+    }
     // destroy renderer
     SDL_DestroyRenderer(rend);
 

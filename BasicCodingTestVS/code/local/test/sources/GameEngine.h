@@ -24,12 +24,11 @@ protected:
 	Ball* ball;
 	vector<Box*>* targetableObjects;
 	Object* bullet;
-	
 public:
 	int level;
-	//reserving 750*500 for game map rest for player and ui
+	//reserving 864*512 for game map rest for player and ui
 	static const int ScreenWidth = 900, ScreenHeight = 900;
-	static const int GameSpaceWidth = 500, GameSpaceHeight = 850;
+	static const int GameSpaceWidth = 512, GameSpaceHeight = 864;
 	bool isPlaying = true;
 	GameEngine();
 	~GameEngine();
@@ -44,8 +43,8 @@ public:
 	void GenerateMap(vector<vector<char>>* mapConfig);
 	void ClearAndRender();
 	Player* GetPlayer();
-	Player* AddPlayer();
-	Ball* AddBall();
+	Player* AddPlayer(bool withText=false);
+	Ball* AddBall(bool withText = false);
 	Ball* GetBall();
 	void DrawBorder(float x, float y, float w, float h, Renderer::Color c);
 	void DrawBorder(float w, float h, Renderer::Color c);

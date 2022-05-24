@@ -8,16 +8,19 @@ Box::Box(Renderer::Color c, ObjectType ot) : Object(c, ot) {
 	boxHp = 1;
 	boxState = FULL_HP;
 }
+Box::Box(SDL_Renderer* rend, const char* assetPath, ObjectType ot) : Object(rend, assetPath, ot) {
+	boxHp = 1;
+	boxState = FULL_HP;
+}
 
-
-void Box::DamageBox(int dmg) {
+void Box::DamageBox(SDL_Renderer* rend, int dmg) {
 	if (boxState == DESTROYED)return;
 	boxHp-= dmg;
 	if (boxHp <= 0) {
 		boxState = DESTROYED;
 		return;
 	}
-	UpdateBoxColor();
+	UpdateBoxColorAndTexture(rend);
 	boxState = DAMAGED;
 
 }
@@ -44,30 +47,36 @@ void Box::SetBoxColorAndType(char ch) {
 		: (ch == 'a') ? ARMORED
 		: NORMAL;
 }
-void Box::UpdateBoxColor() {
+void Box::UpdateBoxColorAndTexture(SDL_Renderer* rend) {
 	switch (boxHp) {
 	case 1:
-		color = Renderer::YELLOW;
+		if (renderType == COLOR) color = Renderer::YELLOW;
+		else ChangeTexture(rend, normalBoxAsset);
 		//boxType = NORMAL;
 		break;
 	case 2:
-		color = Renderer::DARK_YELLOW;
+		if (renderType == COLOR)color = Renderer::DARK_YELLOW;
+		else ChangeTexture(rend, armoredBoxAsset);
 		//boxType = ARMORED;
 		break;
 	case 3:
-		color = Renderer::BLUE;
+		if (renderType == COLOR)color = Renderer::BLUE;
+		else ChangeTexture(rend, metalBoxAsset);
 		//boxType = METAL;
 		break;
 	case 4:
-		color = Renderer::DARK_BLUE;
+		if (renderType == COLOR)color = Renderer::DARK_BLUE;
+		else ChangeTexture(rend, hardBoxAsset);
 		//boxType = HARD;
 		break;
 	case 5:
-		color = Renderer::MAGENTA;
+		if (renderType == COLOR)color = Renderer::MAGENTA;
+		else ChangeTexture(rend, veryHardBoxAsset);
 		//boxType = VERY_HARD;
 		break;
 	case 7:
-		color = Renderer::DARK_MAGENTA;
+		if (renderType == COLOR)color = Renderer::DARK_MAGENTA;
+		else ChangeTexture(rend, extremeBoxAsset);
 		//boxType = XTREME;
 		break;
 	}

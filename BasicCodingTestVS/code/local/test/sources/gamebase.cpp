@@ -33,8 +33,8 @@ int main(  )
 	
 	map->PrintMap();
 
-	Player* p = engine->AddPlayer();
-	Ball* ball = engine->AddBall();
+	Player* p = engine->AddPlayer(true);
+	Ball* ball = engine->AddBall(true);
 
 	engine->StartLevel(1,map->GetMap());
 
@@ -54,6 +54,7 @@ int main(  )
 	float mouseX = 256;
 	float mouseY = 256;
 	bool mousePressed = false;
+	bool skipLevelHack = false;
 	cout << "Click on the mouse button to start !!!\n Destroy All blocks to go to the next level\n move using the arrows\n once the ball stops click on the mouse to continue\n use escape to leave\n You start with 5 Hp and lose 1 if the ball touch the floor\nearn score and points by destroying the blocks\n";
 	bool running = engine->isPlaying;
 	unsigned int lastTime = SDL_GetTicks();
@@ -65,7 +66,7 @@ int main(  )
 				running = false;
 				break;
 			case SDL_KEYDOWN:
-				if(event.key.keysym.sym == SDLK_ESCAPE) {
+				if (event.key.keysym.sym == SDLK_ESCAPE) {
 					running = false;
 				}
 				else if (event.key.keysym.sym == SDLK_SPACE) {
@@ -75,6 +76,9 @@ int main(  )
 						engine->GetPlayer()->shootCooldown = true;
 					}
 				}
+				else if (event.key.keysym.sym == SDLK_l) {
+					skipLevelHack = true;
+				}
 				else engine->GetPlayer()->Move(engine->HandleKeyboard(event));
 				break;
 			case SDL_MOUSEMOTION:
@@ -83,7 +87,7 @@ int main(  )
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				mousePressed = true;
-				engine->GetBall()->SetVelocity(5, -5);
+				if(engine->GetBall()->VelocityX==0 && engine->GetBall()->VelocityY == 0) engine->GetBall()->SetVelocity(5, -5);
 				break;
 			case SDL_MOUSEBUTTONUP:
 				mousePressed = false;
@@ -107,7 +111,8 @@ int main(  )
 		engine->BoxesGoDown();
 		ball->SpeedUp(1);
 		}
-		if (engine->CheckWinCondition()) {
+		if (engine->CheckWinCondition() || skipLevelHack) {
+			skipLevelHack = false;
 			engine->level++;
 			if (engine->level > 7) { 
 				cout << "##########################\nYOU WIN THE GAME !!!!!!!\n###############################";
