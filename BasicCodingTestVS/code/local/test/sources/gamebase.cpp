@@ -1,20 +1,3 @@
-/*
-
-eeeeeeeeeeeeeeeebbbbbeeeeeeeeeee
-ebbbbbbbbbebbbbbbbbbbbbbebbbbbbb
-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-eeeeeeeeeeeebbbbbbeeeeeeeeeeeeee
-
-read box position map from files
-load and convert map to objects
-player - ball objects
-player controlled with mouse invert x or y based on contact position with the ball
-box objects to destroy
-score tracking
-
-gameengine to clean the creating of window and keyboard handling 
-
-*/
 #include "gamebase.hpp"
 #include "renderer.hpp"
 #include "game.hpp"
@@ -25,40 +8,36 @@ gameengine to clean the creating of window and keyboard handling
 #include "GameEngine.h"
 int main(  )
 {
+
+	//creating a mapengine for reading level maps
 	MapEngine* map = new MapEngine();
+	//creating game engine for rendering game elements and handling physics related stuff
 	GameEngine* engine = new GameEngine();
 
-
+	//loading the map of the first level
 	map->LoadMap(1);
-	
-	map->PrintMap();
+	//map->PrintMap();
 
+	//creating a player
 	Player* p = engine->AddPlayer(true);
+	//adding a ball
 	Ball* ball = engine->AddBall(true);
-
+	//starting the first level
 	engine->StartLevel(1,map->GetMap());
 
-	/*SDL_Init(SDL_INIT_VIDEO);
-
-	SDL_Window* pWindow = SDL_CreateWindow("Game",
-			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			512, 512,
-			0);
-	SDL_Renderer* pRenderer = SDL_CreateRenderer(pWindow, -1, SDL_RENDERER_PRESENTVSYNC);
-
-	Renderer renderer(pRenderer);
-
-	GameBase* pGame = new Game();
-
-	*/
+	//initializing mouse positions
 	float mouseX = 256;
 	float mouseY = 256;
 	bool mousePressed = false;
+	//initializing testing variable
 	bool skipLevelHack = false;
+	//priting a simple tutorial
 	cout << "Click on the mouse button to start !!!\n Destroy All blocks to go to the next level\n move using the arrows\n once the ball stops click on the mouse to continue\n use escape to leave\n You start with 5 Hp and lose 1 if the ball touch the floor\nearn score and points by destroying the blocks\n";
 	bool running = engine->isPlaying;
 	unsigned int lastTime = SDL_GetTicks();
+	//game loop
 	while(running & engine->isPlaying) {
+		//handling user input
 		SDL_Event event;
 		while(SDL_PollEvent(&event)) {
 			switch(event.type) {
@@ -94,14 +73,12 @@ int main(  )
 				break;
 			}
 		}
+		//handling object physics
 		engine->GetBall()->Move(0, 0);
 		engine->HandleBorderCollision(engine->GetPlayer());
 		engine->HandleBorderCollision(engine->GetBall());
 
 		engine->ClearAndRender();
-
-		//SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
-		//SDL_RenderClear(pRenderer);
 
 		unsigned int time = SDL_GetTicks();
 		float timeStep = (time - lastTime) / 1000.0f;
@@ -111,6 +88,7 @@ int main(  )
 		engine->BoxesGoDown();
 		ball->SpeedUp(1);
 		}
+		//checking win conditions
 		if (engine->CheckWinCondition() || skipLevelHack) {
 			skipLevelHack = false;
 			engine->level++;
@@ -121,14 +99,11 @@ int main(  )
 			map->LoadMap(engine->level);
 			engine->StartLevel(engine->level, map->GetMap());
 		}
+		//checking losing condition
 		if (engine->CheckLoseCondition()) {
 			cout << "##########################\nYOU LOSE THE GAME !!!!!!!\n###############################";
 			running = false;
 		}
-		//pGame->update(timeStep, mouseX, mouseY, mousePressed);
-		//pGame->render(renderer);
-
-		//SDL_RenderPresent(pRenderer);
 	}
 
 	//clean & shutdown

@@ -3,6 +3,9 @@
 
 #include "Object.h"
 
+/*
+* @class: the class that handles the box's working and states
+*/
 class Box :public Object {
 
 protected:
@@ -35,11 +38,29 @@ public:
 	Box();
 	Box(Renderer::Color c, ObjectType ot);
 	Box(SDL_Renderer* rend, const char* assetPath, ObjectType ot);
+	/*
+	* @brief damages the box with the dmg variable, the object visuals are also updated
+	*/
 	void DamageBox(SDL_Renderer* rend, int dmg);
+	/*
+	* @brief sets the box's hp
+	*/
 	void SetBoxHp(int hp);
+	/*
+	* @brief sets the box's hp depending on the box type 'ch' in the map configuration 
+	*/
 	void SetBoxHp(char ch);
+	/*
+	* @return: returns the box's hp
+	*/
 	int GetBoxHp();
+	/*
+	* @brief sets the box's color and type depending on the map configuration 'ch'
+	*/
 	void SetBoxColorAndType(char ch);
+	/*
+	* @brief updates the box's color and texture depending on the box's hp
+	*/
 	void UpdateBoxColorAndTexture(SDL_Renderer* rend);
 };
 
